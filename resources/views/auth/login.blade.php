@@ -13,7 +13,7 @@
         <div class="card-body p-5">
             <div class="login-userheading">
                 <h3>Sign In</h3>
-                <h4>Access the WISMA panel using your username and passcode.</h4>
+                {{-- <h4>Access the WISMA panel using your username and passcode.</h4> --}}
             </div>
 
             @error('username')
@@ -30,14 +30,10 @@
                     <input type="text" value="{{ old('username') }}" name="username"
                         class="form-control @error('username') is-invalid @enderror border-end-0" autocomplete="false"
                         required>
-                    <span class="input-group-text border-start-0">
-                        <i class="ti ti-mail"></i>
-                    </span>
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Password <span class="text-danger">
-                        *</span></label>
+                <label class="form-label">Password <span class="text-danger"> *</span></label>
                 <div class="pass-group">
                     <input type="password" name="password" class="pass-input form-control">
                     <span class="ti toggle-password ti-eye-off text-gray-9"></span>
@@ -65,5 +61,4 @@
         </div>
     </div>
 </form>
-
 @endsection

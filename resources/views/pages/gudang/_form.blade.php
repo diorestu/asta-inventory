@@ -18,18 +18,18 @@
 
     <div class="form">
         <div class="form-floating mb-3">
-            <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $data->name ?? '') }}"
-                required>
+            <input type="text" name="name" id="name" class="form-control"
+                value="{{ old('name', $data->name ?? '') }}" required>
             <label for="name">Nama</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="site" id="site" class="form-control" value="{{ old('site', $data->site ?? '') }}"
-                required>
+            <input type="text" name="site" id="site" class="form-control"
+                value="{{ old('site', $data->site ?? '') }}" required>
             <label for="site">Nama Site/Project</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="pic" id="pic" class="form-control" value="{{ old('pic', $data->pic ?? '') }}"
-                required>
+            <input type="text" name="pic" id="pic" class="form-control"
+                value="{{ old('pic', $data->pic ?? '') }}" required>
             <label for="pic">Nama Penanggung Jawab</label>
         </div>
         <div class="form-floating mb-3">
@@ -45,14 +45,13 @@
             <label for="tipe">Kategori</label>
         </div>
         <div class="form-floating mb-4">
-            <textarea class="form-control" name="address" id="address"
-                style="height: 80px">{{ old('address', $data->address ?? '') }}</textarea>
+            <textarea class="form-control" name="address" id="address" style="height: 80px">{{ old('address', $data->address ?? '') }}</textarea>
             <label for="address">Alamat Lengkap</label>
         </div>
         <div class="col-12 text-end">
             <button type="submit" class="btn btn-secondary">
                 {{-- Teks tombol dinamis --}}
-                {{ isset($data) ? 'Update Kategori' : 'Simpan Kategori' }}
+                {{ isset($data) ? 'Update Gudang' : 'Simpan Gudang' }}
             </button>
         </div>
     </div>

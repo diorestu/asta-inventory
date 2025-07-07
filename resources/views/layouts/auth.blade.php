@@ -15,21 +15,12 @@
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
-
-    <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/apple-touch-icon.png') }}">
-
-    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
-
-    <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}">
-
-    <!-- Tabler Icon CSS -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/tabler-icons/tabler-icons.min.css') }}">
-
-    <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <style>
         .bg-login {
@@ -70,19 +61,31 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    {{--
+    <script src="{{ asset('assets/js/script.js') }}"></script> --}}
+    @include('layouts.includes.script')
+    <script>
+        // Pilih semua elemen dengan class 'toggle-password'
+        const togglePassword = document.querySelectorAll('.toggle-password');
 
-    <!-- jQuery -->
-    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}" type="5428484c302d0f4b36d4c041-text/javascript"></script>
+        togglePassword.forEach(icon => {
+            icon.addEventListener('click', function (e) {
+                // Dapatkan elemen input password di dalam 'pass-group' yang sama
+                const passInput = document.querySelectorAll('.pass-input');;
 
-    <!-- Feather Icon JS -->
-    <script src="{{ asset('assets/js/feather.min.js') }}" type="5428484c302d0f4b36d4c041-text/javascript"></script>
+                // Cek tipe input saat ini
+                const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passInput.setAttribute('type', type);
 
-    <!-- Bootstrap Core JS -->
-    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"
-        type="5428484c302d0f4b36d4c041-text/javascript"></script>
-
-    <!-- Custom JS -->
-    <script src="{{ asset('assets/js/script.js') }}" type="5428484c302d0f4b36d4c041-text/javascript"></script>
+                // Ganti ikon mata
+                this.classList.toggle('ti-eye');
+                this.classList.toggle('ti-eye-slash');
+            });
+        });
+    </script>
 </body>
 
 </html>

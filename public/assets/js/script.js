@@ -149,18 +149,16 @@ $(document).ready(function(){
 	}
 	
 	// toggle-password
-	if($('.toggle-password').length > 0) {
-		$(document).on('click', '.toggle-password', function() {
-			$(this).toggleClass("fa-eye fa-eye-slash");
-			alert('ok');
-			var input = $(".pass-input");
-			if (input.attr("type") == "password") {
-				input.attr("type", "text");
-			} else {
-				input.attr("type", "password");
-			}
-		});
-	}
+	$(document).on('click', '.toggle-password', function() {
+		// alert('ok')
+		$(this).toggleClass("fa-eye fa-eye-slash");
+		var input = $(".pass-input");
+		if (input.attr("type") == "password") {
+			input.attr("type", "text");
+		} else {
+			input.attr("type", "password");
+		}
+	});
 	if($('.toggle-passwords').length > 0) {
 		$(document).on('click', '.toggle-passwords', function() {
 			$(this).toggleClass("fa-eye fa-eye-slash");

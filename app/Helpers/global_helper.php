@@ -105,7 +105,7 @@ function terbilang($nilai)
     } else {
         $hasil = trim(penyebut($nilai));
     }
-    return $hasil;
+    return ucwords($hasil);
 }
 function removeNol($angka)
 {

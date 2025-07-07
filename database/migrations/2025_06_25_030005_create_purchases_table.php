@@ -35,11 +35,13 @@ return new class extends Migration {
             $table->id();
             // Jika PRF dihapus, itemnya juga ikut terhapus
             $table->foreignId('purchase_request_id')->constrained('purchase_requests')->onDelete('cascade');
-            $table->string('item_name');
-            $table->text('description')->nullable();
-            $table->unsignedInteger('quantity');
-            $table->string('unit_of_measurement'); // Misal: pcs, kg, liter, box
-            $table->decimal('estimated_price', 15, 2)->nullable(); // Estimasi harga satuan
+            $table->string('item_id')->nullable();
+            $table->string('name');
+            // $table->text('description')->nullable();
+            $table->unsignedInteger('qty');
+            $table->string('satuan'); // Misal: pcs, kg, liter, box
+            $table->decimal('est_price', 15, 2)->nullable(); // Estimasi harga satuan
+            $table->decimal('subtotal', 15, 2)->nullable(); // Estimasi total harga
             $table->timestamps();
         });
 

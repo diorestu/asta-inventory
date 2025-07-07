@@ -19,7 +19,8 @@
     <div class="modern-profile p-3 pb-0">
         <div class="text-center rounded bg-light p-3 mb-4 user-profile">
             <div class="avatar avatar-lg online mb-3">
-                <img src="{{ asset('assets/img/customer/customer15.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('assets/img/customer/customer15.jpg') }}" alt="Img"
+                    class="img-fluid rounded-circle">
             </div>
             <h6 class="fs-14 fw-bold mb-1">{{ auth()->user()->name }}</h6>
             <p class="fs-12 mb-0">System Admin</p>
@@ -35,7 +36,8 @@
     <div class="sidebar-header p-3 pb-0 pt-0">
         <div class="text-center rounded bg-transparent p-2 mb-2 sidebar-profile d-flex align-items-center">
             <div class="avatar avatar-md onlin">
-                <img src="{{ asset('assets/img/customer/customer15.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('assets/img/customer/customer15.jpg') }}" alt="Img"
+                    class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
                 <h6 class="fs-14 fw-bold mb-1">{{ auth()->user()->name }}</h6>
@@ -43,8 +45,9 @@
             </div>
         </div>
         <div>
-            <select class="form-select form-select-sm mb-3" id="language-select">
-                <option value="en" selected>PT Solusi Usaha</option>
+            {{-- <label for="pilih_warehouse">Pilih Gudang</label> --}}
+            <select class="form-select form-select-sm mb-3" id="pilih_warehouse">
+                {{-- Options will be populated by AJAX --}}
             </select>
         </div>
         <div class="d-flex align-items-center justify-content-center menu-item mb-2 gap-3">
@@ -83,7 +86,8 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Transaksional</h6>
                     <ul>
-                        <li><a href="{{ route('permintaan.index') }}"><i
+                        <li class="{{ request()->is('permintaan*') ? 'active' : '' }}"><a
+                                href="{{ route('permintaan.index') }}"><i
                                     class="ti ti-transfer-in fs-16 me-2"></i><span>Permintaan</span></a>
 
                         </li>
@@ -137,4 +141,47 @@
         </div>
     </div>
 </div>
-<!-- /Sidebar -->
+
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            // 1. Populate the select element using AJAX
+            const findWarehouse = $('#pilih_warehouse');
+
+            const apiUrl =
+                "{!! route('wh.find') !!}";
+
+            $.getJSON(apiUrl, function(data) {
+                // Clear the "Loading..." option
+                findWarehouse.empty();
+                console.log(data)
+                // Add a default, non-selectable option
+                findWarehouse.append('<option value="">-- Pilih Gudang --</option>');
+
+                // Loop through the data from the API and add each as an option
+                $.each(data, function(index, language) {
+                    const option = $('<option></option>')
+                        .val(language.id) // Set the value attribute (e.g., "en")
+                        .text(language.name); // Set the display text (e.g., "English")
+
+                    findWarehouse.append(option);
+                });
+            }).fail(function() {
+                // Handle cases where the API call fails
+                findWarehouse.empty().append('<option value="">Tidak Ada Data Tersedia</option>');
+                // console.error('Could not fetch data from ' + apiUrl);
+            });
+
+            // 2. Set up an event listener for when the value changes
+            findWarehouse.on('change', function() {
+                // Get the value of the currently selected option
+                const selectedValue = $(this).val();
+
+                // Do something with the selected value
+                console.log('Berhasil memindahkan ke gudang:', selectedValue);
+            });
+
+        });
+    </script>
+@endpush

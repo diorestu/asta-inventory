@@ -86,7 +86,7 @@ class ProdukController extends Controller
     public function show(string $id)
     {
         $produk = Product::with('category', 'unit')->find($id);
-        $productCode = $produk->sku;
+        $productCode = $produk->sku ?? '-';
         // --- Perubahan di sini ---
 
         // 1. Buat instance baru dari generator

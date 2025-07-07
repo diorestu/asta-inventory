@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\APIController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -13,9 +14,15 @@ use App\Http\Controllers\Admin\PurchaseRequestController;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::middleware(['auth', 'is.admin'])->group(function () {
+    // Main Menu
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    // Utility
+    Route::get('utils/produk/search', [APIController::class, 'search'])->name('utils.search');
+    Route::get('utils/warehouse/search', [APIController::class, 'findWarehouse'])->name('wh.find');
+
+    // Operasional
     Route::resource('produk', ProdukController::class);
     Route::post('produk/bulk-delete', [ProdukController::class, 'bulkDelete'])->name('produk.bulk-delete');
     Route::resource('kategori', KategoriController::class);
@@ -28,6 +35,8 @@ Route::middleware(['auth', 'is.admin'])->group(function () {
     Route::post('supplier/bulk-delete', [SupplierController::class, 'bulkDelete'])->name('supplier.bulk-delete');
     Route::resource('divisi', DivisiController::class);
     Route::post('divisi/bulk-delete', [DivisiController::class, 'bulkDelete'])->name('divisi.bulk-delete');
+
+    // Transaksional
     Route::resource('permintaan', PurchaseRequestController::class);
     Route::post('permintaan/bulk-delete', [PurchaseRequestController::class, 'bulkDelete'])->name('pembelian.bulk-delete');
 });

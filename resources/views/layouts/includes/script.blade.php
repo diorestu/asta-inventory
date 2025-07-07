@@ -33,7 +33,7 @@
         @if (session('success'))
             Toastify({
                 text: "{{ session('success') }}",
-                duration: 1200,
+                duration: 2500,
                 gravity: "top",
                 position: "right",
                 backgroundColor: "#1b263b",
@@ -44,7 +44,7 @@
         @if (session('error'))
             Toastify({
                 text: "{{ session('error') }}",
-                duration: 1200,
+                duration: 2500,
                 gravity: "top",
                 position: "right",
                 backgroundColor: "#9d0208",
@@ -56,7 +56,7 @@
             @foreach ($errors->all() as $error)
                 Toastify({
                     text: "{{ $error }}",
-                    duration: 1200,
+                    duration: 2500,
                     gravity: "top",
                     position: "right",
                     backgroundColor: "#9d0208",

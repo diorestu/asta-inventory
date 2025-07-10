@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\PurchaseRequest;
+use App\Models\PurchaseOrder;
 use Carbon\Carbon;
 
-class PurchaseRequestNumberService
+class OrderNumberService
 {
     /**
      * Menghasilkan nomor Purchase Request baru yang berurutan.
@@ -23,16 +23,16 @@ class PurchaseRequestNumberService
         $romanMonth = $this->convertMonthToRoman($currentMonth);
 
         // 2. Cari PR terakhir di TAHUN yang sama (nomor urut direset tahunan)
-        $lastPurchaseRequest = PurchaseRequest::whereYear('created_at', $currentYear)
+        $lastPurchaseOrder = PurchaseOrder::whereYear('created_at', $currentYear)
             ->latest('id')
             ->first();
 
         $nextNumber = 1; // Nomor urutan default jika ini yang pertama di tahun ini
 
-        if ($lastPurchaseRequest) {
+        if ($lastPurchaseOrder) {
             // Jika ada PR sebelumnya di tahun ini, ekstrak nomor urutannya
             // PRF/0001/VII/2025 -> urutan ada di bagian kedua (index 1)
-            $parts = explode('/', $lastPurchaseRequest->prf_number);
+            $parts = explode('/', $lastPurchaseOrder->prf_number);
             $lastSequence = (int) $parts[1];
             $nextNumber = $lastSequence + 1;
         }

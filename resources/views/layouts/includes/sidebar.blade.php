@@ -91,7 +91,9 @@
                                     class="ti ti-transfer-in fs-16 me-2"></i><span>Permintaan</span></a>
 
                         </li>
-                        <li><a href=""><i class="ti ti-transfer-out fs-16 me-2"></i><span>Pembelian</span></a>
+                        <li class="{{ request()->is('pembelian*') ? 'active' : '' }}"><a
+                                href="{{ route('pembelian.index') }}"><i
+                                    class="ti ti-transfer-out fs-16 me-2"></i><span>Pembelian</span></a>
                         </li>
                         <li class="submenu">
                             <a href="javascript:void(0);"><i class="ti ti-stack fs-16 me-2"></i><span>Stok</span><span

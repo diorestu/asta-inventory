@@ -27,30 +27,30 @@ class PurchaseRequestController extends Controller
                 })->addColumn('action', function ($row) {
                     return '<a href="' . route('permintaan.show', $row->id) . '"><i class="ti ti-eye fs-16"></i></a>';
                 })->addColumn('status', function ($row) {
-                $color = 'secondary';
-                $text = 'Unknown';
+                    $color = 'secondary';
+                    $text = 'Unknown';
 
-                // Use a switch statement to determine color and text based on status
-                switch ($row->status) {
-                    case 'pending':
-                        $color = 'warning'; // Bootstrap 'warning' color (yellow)
-                        $text = 'Pending';
-                        break;
-                    case 'ditolak':
-                        $color = 'danger';  // Bootstrap 'danger' color (red)
-                        $text = 'Ditolak';
-                        break;
-                    case 'diproses':
-                        $color = 'primary'; // Bootstrap 'primary' color (blue)
-                        $text = 'Diproses';
-                        break;
-                    case 'selesai':
-                        $color = 'success'; // Bootstrap 'primary' color (blue)
-                        $text = 'Selesai';
-                        break;
-                }
-                return '<div class="badge rounded-pill bg-' . $color . '">' . $text . '</div>';
-            })->rawColumns(['checkbox', 'action', 'status'])
+                    // Use a switch statement to determine color and text based on status
+                    switch ($row->status) {
+                        case 'pending':
+                            $color = 'warning'; // Bootstrap 'warning' color (yellow)
+                            $text = 'Pending';
+                            break;
+                        case 'ditolak':
+                            $color = 'danger';  // Bootstrap 'danger' color (red)
+                            $text = 'Ditolak';
+                            break;
+                        case 'diproses':
+                            $color = 'primary'; // Bootstrap 'primary' color (blue)
+                            $text = 'Diproses';
+                            break;
+                        case 'selesai':
+                            $color = 'success'; // Bootstrap 'primary' color (blue)
+                            $text = 'Selesai';
+                            break;
+                    }
+                    return '<div class="badge rounded-pill bg-' . $color . '">' . $text . '</div>';
+                })->rawColumns(['checkbox', 'action', 'status'])
                 ->make(true);
         }
         return view('pages.permintaan.index');
@@ -66,7 +66,12 @@ class PurchaseRequestController extends Controller
             $validatedData['prf_number']  = $newPrfNumber;
             $validatedData['user_id']     = Auth::user()->id;
             $validatedData['status']      = 'pending';
-            $validatedData['total_price'] = array_sum($validatedData['price']);
+            $total_keseluruhan = 0;
+            for ($i = 0; $i < count($validatedData['item_name']); $i++) {
+                $subtotal                     = $validatedData['qty'][$i] * $validatedData['price'][$i];
+                $total_keseluruhan += $subtotal;
+            }
+            $validatedData['total_price'] = $total_keseluruhan;
             $data                         = PurchaseRequest::create($validatedData);
             foreach ($validatedData['item_name'] as $key => $itemId) {
                 PurchaseRequestItem::create([

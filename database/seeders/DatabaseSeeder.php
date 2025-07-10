@@ -24,47 +24,12 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'warehouse']);
         Role::create(['name' => 'management']);
 
-        Department::insert([
-            [
-                'name' => 'Logistik',
-                'pic' => 'Rahmat',
-                'phone' => '081234567890',
-            ],
-            [
-                'name' => 'Keuangan',
-                'pic' => 'Gusti Ayu Apriliani Swantari',
-                'phone' => '081234567890',
-            ],
-            [
-                'name' => 'Operasional',
-                'pic' => 'Arie Haryadi',
-                'phone' => '081234567890',
-            ],
-            [
-                'name' => 'Holding',
-                'pic' => 'Luh Adi Sukarini',
-                'phone' => '081234567890',
-            ],
-            [
-                'name' => 'IT',
-                'pic' => 'Gede Agus Adi Saputra',
-                'phone' => '081234567890',
-            ],
-            [
-                'name' => 'Commercial',
-                'pic' => 'Vania Prajnani',
-                'phone' => '081234567890',
-            ],
-            [
-                'name' => 'HRD',
-                'pic' => 'Komang Indri',
-                'phone' => '081234567890',
-            ],
-            [
-                'name' => 'Manah Liang',
-                'pic' => 'Ervina Bachtiar',
-                'phone' => '081234567890',
-            ]
+        $this->call([
+            DepartmentSeeder::class,
+            SupplierSeeder::class,
+            ProductUnitSeeder::class,
+            ProductCategorySeeder::class,
+            ProductSeeder::class,
         ]);
 
         User::insert([
@@ -107,11 +72,5 @@ class DatabaseSeeder extends Seeder
 
         $user = User::find(1);
         $user->assignRole('masteradmin');
-
-        $this->call([
-            ProductUnitSeeder::class,
-            ProductCategorySeeder::class,
-            ProductSeeder::class,
-        ]);
     }
 }

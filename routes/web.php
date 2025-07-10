@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\APIController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\APIController;
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\GudangController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\SatuanController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\PurchaseOrderController;
 use App\Http\Controllers\Admin\PurchaseRequestController;
 
 Auth::routes();
@@ -39,6 +39,5 @@ Route::middleware(['auth', 'is.admin'])->group(function () {
     // Transaksional
     Route::resource('permintaan', PurchaseRequestController::class);
     Route::post('permintaan/bulk-delete', [PurchaseRequestController::class, 'bulkDelete'])->name('pembelian.bulk-delete');
+    Route::resource('pembelian', PurchaseOrderController::class);
 });
-
-

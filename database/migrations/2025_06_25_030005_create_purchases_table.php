@@ -42,6 +42,7 @@ return new class extends Migration {
             $table->string('satuan'); // Misal: pcs, kg, liter, box
             $table->decimal('est_price', 15, 2)->nullable(); // Estimasi harga satuan
             $table->decimal('subtotal', 15, 2)->nullable(); // Estimasi total harga
+            $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending'); // Status item dalam PRF
             $table->timestamps();
         });
 
@@ -56,6 +57,8 @@ return new class extends Migration {
             $table->date('expected_delivery_date')->nullable(); // Perkiraan tanggal barang tiba
             $table->decimal('total_amount', 15, 2); // Total harga final dari vendor
             $table->text('terms_and_conditions')->nullable();
+            $table->string('pay_method')->nullable();
+            $table->integer('pay_termin')->nullable();
             $table->enum('status', ['pengajuan', 'diterima', 'dikirim', 'batal'])->default('pengajuan');
             $table->timestamps();
         });

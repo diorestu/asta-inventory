@@ -21,6 +21,9 @@ Route::middleware(['auth', 'is.admin'])->group(function () {
     // Utility
     Route::get('utils/produk/search', [APIController::class, 'search'])->name('utils.search');
     Route::get('utils/warehouse/search', [APIController::class, 'findWarehouse'])->name('wh.find');
+    Route::post('utils/warehouse/set', [APIController::class, 'setActiveWarehouse'])->name('wh.setActive');
+    Route::get('utils/get-pr-items/{itemName}', [APIController::class, 'getItemsByName']);
+
 
     // Operasional
     Route::resource('produk', ProdukController::class);

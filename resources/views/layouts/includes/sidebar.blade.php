@@ -159,7 +159,7 @@
                 findWarehouse.empty();
                 console.log(data)
                 // Add a default, non-selectable option
-                findWarehouse.append('<option value="">-- Pilih Gudang --</option>');
+                findWarehouse.append('<option selected disabled>Pilih Gudang</option>');
 
                 // Loop through the data from the API and add each as an option
                 $.each(data, function(index, language) {
@@ -182,6 +182,22 @@
 
                 // Do something with the selected value
                 console.log('Berhasil memindahkan ke gudang:', selectedValue);
+                $.ajax({
+                    url: "{{ route('wh.setActive') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        warehouse_id: selectedValue
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        // Optionally, you can show a success message or update the UI
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error while changing warehouse:', error);
+                        // Optionally, you can show an error message
+                    }
+                });
             });
 
         });

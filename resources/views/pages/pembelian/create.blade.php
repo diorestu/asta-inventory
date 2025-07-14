@@ -2,300 +2,250 @@
 
 @section('content')
     <div class="content">
+        {{-- Bagian Header tidak berubah --}}
         <x-page-header :links="[
             ['url' => '#', 'text' => 'Transaksional'],
             ['url' => route('pembelian.index'), 'text' => 'Purchase Order'],
-            ['url' => '#', 'text' => 'Buat Purchase Order'],
+            ['url' => route('pembelian.index'), 'text' => 'Buat Purchase Order'],
         ]">
-            <x-slot:title>Buat Purchase Order</x-slot:title>
+            <x-slot:title>Buat Purchase Order Baru</x-slot:title>
         </x-page-header>
 
+        {{-- Bagian Form tidak berubah --}}
         @if ($errors->any())
             <div class="alert alert-danger">
-                <ul>
+                <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
         @endif
-        <div class="card">
-            <form action="#" method="POST" id="purchaseOrderForm">
-                <div class="card-body">
-                    @csrf
-                    <div class="row mb-3">
-                        <div class="col-md-6">
+
+        <form action="{{ route('pembelian.store') }}" method="POST" id="po-form">
+            @csrf
+            <div class="card shadow-sm mb-3">
+                <div class="card-body border-bottom">
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-md-3">
                             <div class="form-floating">
-                                <select class="form-select" id="floatingSelectGrid">
-                                    <option value="">-- Pilih Supplier --</option>
-                                    @foreach ($vendors ?? [] as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                <select name="vendor_id" id="vendor_id" class="form-select" required>
+                                    @foreach ($vendors as $vendor)
+                                        <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
                                     @endforeach
                                 </select>
-                                <label for="floatingSelectGrid">Nama Vendor</label>
+                                <label for="vendor_id" class="form-label">Pilih Vendor</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <x-input type="date" name="po_date" label="Tanggal PO" :data="date('Y-m-d')" />
-                        </div>
-                    </div>
-                    <div>
-                        <table class="sales-form table mb-3">
-                            <thead>
-                                <tr>
-                                    <th>Nama Produk</th>
-                                    <th>Qty</th>
-                                    <th>Satuan</th>
-                                    <th>Harga</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="product-container">
-                                <tr class="product-selection autocomplete-container">
-                                    <td class="ps-0 pe-1" width="50%">
-                                        <input type="hidden" class="item_id" name="item_id[]">
-                                        <input type="text" name="item_name[]" class="form-control item"
-                                            autocomplete="off">
-                                        <div class="suggestions-list"></div>
-                                    </td>
-                                    <td width="15%" class="ps-0 pe-1">
-                                        <input type="number" class="quantity form-control" name="qty[]" min="1"
-                                            value="1" placeholder="Qty">
-                                    </td>
-                                    <td width="12%" class="ps-0 pe-1">
-                                        <input type="text" class="form-control satuan" name="satuan[]" min="1"
-                                            placeholder="Satuan">
-                                    </td>
-                                    <td width="20%" class="text-end ps-0 pe-1">
-                                        <input type="number" class="form-control price price-display" name="price[]"
-                                            value="">
-                                    </td>
-                                    <td width="3%" class="px-0">
-                                        <button type="button" class="remove-product btn rounded-pill btn-sm text-danger"><i
-                                                class="ti ti-trash mb-0"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>
-                                        <button type="button" class="add-product btn btn-sm btn-dark">Tambah
-                                            Produk</button>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <h4 class="text-end fw-bolder">TOTAL</h4>
-                                    </td>
-                                    <td class="summary-section text-end">
-                                        <div class="total-price">
-                                            <h4 id="grand-total" class="fw-bolder">Rp 0</h4>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <div class="d-flex justify-content-end align-items-center gap-3 mb-3">
-                            <div class="form-floating w-25">
-                                <select class="form-select" id="floatingSelectGrid">
-                                    <option value="">-- Pilih Supplier --</option>
-                                </select>
-                                <label for="floatingSelectGrid">Metode Pembayaran</label>
-                            </div>
-                            <div class="form-floating w-25">
-                                <input type="number" name="pay_term" placeholder="Payment Termin"
-                                    class="form-select" />
-                                <label for="floatingSelectGrid">Termin Pembayaran</label>
+
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <input type="date" name="order_date" id="order_date" class="form-control"
+                                    value="{{ date('Y-m-d') }}" required>
+                                <label for="order_date" class="form-label">Tanggal Pembuatan Order</label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-end align-items-center gap-2">
-                        <button type="reset" class="btn btn-soft-danger" data-bs-dismiss="modal">Reset Form</button>
-                        <button type="submit" class="btn btn-secondary d-flex align-items-center">
-                            <i class="ti ti-device-floppy fs-16 me-2"></i>
-                            {{ isset($data) ? 'Update Order' : 'Simpan Order' }}
-                        </button>
+                <div class="card-body">
+                    <div class="row align-items-end mb-3">
+                        <div class="col-md-5">
+                            <div class="form-floating">
+                                <select id="item-selector" class="form-select">
+                                    {{-- <option value="" disabled selected>Pilih Nama Item</option> --}}
+                                    @foreach ($itemNames as $itemName)
+                                        <option value="{{ $itemName }}">{{ $itemName }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="item-selector" class="form-label">Pilih Nama Item untuk Ditambahkan</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="add-item-btn"
+                                class="btn btn-secondary d-flex align-items-center shadow-none">
+                                <i class="ti ti-plus fs-16 me-2"></i>Tambah
+                            </button>
+                        </div>
                     </div>
 
+                    {{-- PERUBAHAN: Kita buat struktur tabelnya di sini --}}
+                    <div class="table-responsive mt-3">
+                        <div class="table-responsive mt-4">
+                            <table class="table table-bordered" id="po-items-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Item & Detail PR</th>
+                                        <th class="text-center" style="width: 15%;">Total Qty Req.</th>
+                                        <th style="width: 15%;">Qty Order</th>
+                                        <th style="width: 20%;">Harga Satuan (Rp)</th>
+                                        <th style="width: 5%;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                {{-- PASTIKAN TBODY MEMILIKI ID INI --}}
+                                <tbody id="po-items-tbody">
+                                    <tr id="empty-row">
+                                        <td colspan="5" class="text-center text-muted">Belum ada item yang ditambahkan
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-success btn-lg">Simpan Purchase Order</button>
+            </div>
+        </form>
     </div>
 @endsection
 
-
-@push('css')
-    <style>
-        .autocomplete-container {
-            position: relative;
-        }
-
-        .suggestions-list {
-            display: none;
-            /* Hidden by default */
-            position: absolute;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            border-top: none;
-            z-index: 99;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: white;
-        }
-
-        .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .suggestion-item:hover {
-            background-color: #e9e9e9;
-        }
-    </style>
-@endpush
-
 @push('js')
     <script>
-        $(document).ready(function() {
+        $(function() {
+            const poItemsTbody = $('#po-items-tbody');
 
-            // =================================================================
-            // EVENT DELEGATION UNTUK AUTOCOMPLETE
-            // Listener ditempelkan di #product-container, tapi hanya aktif jika event
-            // terjadi pada elemen dengan class '.item'
-            // =================================================================
-            $('#product-container').on('input', '.item', function() {
-                const inputField = $(this);
-                const searchTerm = inputField.val();
-                const row = inputField.closest('.product-selection');
-                const suggestionsList = row.find(
-                    '.suggestions-list'); // Cari suggestions-list di dalam baris yg sama
-                const productIdInput = row.find('.item_id');
-
-                productIdInput.val(''); // Reset ID saat mengetik lagi
-
-                if (searchTerm.length < 2) {
-                    suggestionsList.hide().empty();
+            $('#add-item-btn').on('click', function() {
+                const selectedItemName = $('#item-selector').val();
+                if (!selectedItemName) {
+                    alert('Silakan pilih nama item terlebih dahulu.');
                     return;
                 }
 
+                const addButton = $(this);
+                addButton.prop('disabled', true).text('Memuat...');
+
                 $.ajax({
-                    url: '{!! route('utils.search') !!}',
-                    method: 'GET',
-                    data: {
-                        term: searchTerm
-                    },
-                    success: function(data) {
-                        suggestionsList.empty();
-                        if (data.length > 0) {
-                            $.each(data, function(index, product) {
-                                const item = $('<div></div>')
-                                    .addClass('suggestion-item')
-                                    .text(product.name) // Tampilkan nama produk
-                                    .data('id', product.id); // Simpan id
-                                // .data('price', product.selling_price); // Simpan harga
-                                suggestionsList.append(item);
-                            });
-                            suggestionsList.show();
-                        } else {
-                            suggestionsList.hide();
+                    url: `/utils/get-pr-items/${encodeURIComponent(selectedItemName)}`,
+                    type: 'GET',
+                    success: function(details) {
+                        if (details.length > 0) {
+                            $('#empty-row').remove();
+
+                            // PERUBAHAN UTAMA: Panggil fungsi baru untuk membuat satu baris gabungan
+                            const newRowHtml = createConsolidatedRowHtml(selectedItemName,
+                                details);
+                            poItemsTbody.append(newRowHtml);
+
+                            $(`#item-selector option[value="${selectedItemName}"]`).prop(
+                                'disabled', true);
+                            $('#item-selector').val('');
                         }
                     },
-                    error: function(err) {
-                        console.error('Error fetching data:', err);
-                        suggestionsList.hide();
+                    error: function(xhr) {
+                        console.error('Gagal mengambil data item:', xhr.responseText);
+                        alert('Terjadi kesalahan saat mengambil detail item.');
+                    },
+                    complete: function() {
+                        addButton.prop('disabled', false).text('Tambah');
                     }
                 });
             });
 
-            // =================================================================
-            // EVENT DELEGATION UNTUK KLIK ITEM SARAN
-            // =================================================================
-            $('#product-container').on('click', '.suggestion-item', function() {
-                const selectedItem = $(this);
-                const row = selectedItem.closest('.product-selection');
+            // Logika Hapus: Sekarang lebih sederhana
+            poItemsTbody.on('click', '.btn-remove-row', function() {
+                console.log("Tombol hapus diklik."); // Untuk debugging
+                const rowToRemove = $(this).closest('tr');
+                const itemName = rowToRemove.data('item-name');
+                // Pemeriksaan keamanan: pastikan kita benar-benar menemukan sebuah <tr>
+                if (rowToRemove.length > 0) {
+                    console.log("Menghapus baris:", rowToRemove); // Untuk debugging
 
-                // Isi form di baris yang sesuai
-                row.find('.item').val(selectedItem.text());
-                row.find('.item_id').val(selectedItem.data('id'));
+                    const itemName = rowToRemove.data('item-name');
 
-                // Asumsi API mengembalikan 'selling_price', sesuaikan jika nama fieldnya beda
-                const price = selectedItem.data('price') || 0;
-                row.find('.price').val(formatRupiah(price));
+                    // Hapus baris dari DOM
+                    rowToRemove.remove();
 
-                // Sembunyikan dan kosongkan daftar saran
-                row.find('.suggestions-list').hide().empty();
+                    // Aktifkan kembali opsi di dropdown jika perlu
+                    const remainingRows = poItemsTbody.find(`tr[data-item-name="${itemName}"]`);
+                    if (remainingRows.length === 0) {
+                        $(`#item-selector option[value="${itemName}"]`).prop('disabled', false);
+                    }
 
-                // Hitung ulang total
-                calculateTotal();
-            });
+                    // Tampilkan pesan jika tabel kembali kosong
+                    if (poItemsTbody.children().length === 0) {
+                        poItemsTbody.append(
+                            '<tr id="empty-row"><td colspan="5" class="text-center text-muted">Belum ada item yang ditambahkan</td></tr>'
+                        );
+                    }
 
-            // Sembunyikan daftar saran jika pengguna mengklik di luar
-            $(document).on('click', function(e) {
-                if ($(e.target).closest('.autocomplete-container').length === 0) {
-                    $('.suggestions-list').hide();
-                }
-            });
-
-            // Tambah baris produk baru
-            $('.add-product').on('click', function() {
-                const newRow = $('#product-container .product-selection').first().clone(
-                    true); // 'true' untuk meng-clone event handlers juga
-                newRow.find('input').val(''); // Kosongkan semua input di baris baru
-                newRow.find('.quantity').val(1);
-                newRow.find('.satuan').val('');
-                newRow.find('.price').val('0');
-                $('#product-container').append(newRow);
-                updateRemoveButtons();
-            });
-
-            // Hapus baris produk
-            $('#product-container').on('click', '.remove-product', function() {
-                $(this).closest('.product-selection').remove();
-                updateRemoveButtons();
-                calculateTotal();
-            });
-
-            // Hitung ulang total saat quantity atau harga diubah manual
-            $('#product-container').on('input', '.quantity, .price', function() {
-                calculateTotal();
-            });
-
-            // Kalkulasi Grand Total
-            function calculateTotal() {
-                let grandTotal = 0;
-                $('#product-container .product-selection').each(function() {
-                    const row = $(this);
-                    const priceText = row.find('.price').val() || '0';
-                    // Ubah format Rupiah kembali menjadi angka
-                    const price = parseFloat(priceText.replace(/[^0-9]/g, '')) || 0;
-                    const quantity = parseInt(row.find('.quantity').val()) || 0;
-                    grandTotal += price * quantity;
-                });
-                $('#grand-total').text(formatRupiah(grandTotal));
-            }
-
-            // Format angka ke Rupiah
-            function formatRupiah(amount) {
-                return 'Rp ' + parseFloat(amount).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            }
-
-            // Update status tombol hapus
-            function updateRemoveButtons() {
-                const rows = $('#product-container .product-selection');
-                if (rows.length <= 1) {
-                    rows.find('.remove-product').hide();
                 } else {
-                    rows.find('.remove-product').show();
+                    // Jika .closest('tr') gagal, log pesan error
+                    console.error("Kesalahan: Tidak dapat menemukan elemen <tr> induk untuk dihapus.");
                 }
+            });
+
+            // FUNGSI BARU: Untuk membuat satu baris yang menggabungkan semua PR
+            function createConsolidatedRowHtml(itemName, details) {
+                let totalQuantity = 0;
+                let prDetailsHtml = '';
+                let hiddenInputsHtml = '';
+
+                // 1. Loop untuk kalkulasi total dan membuat string detail & input tersembunyi
+                details.forEach(item => {
+                    totalQuantity += item.qty;
+                    prDetailsHtml += `PR: ${item.purchase_request.prf_number} (${item.qty}), `;
+
+                    // Buat input tersembunyi untuk setiap item PR
+                    // Ini kuncinya: Backend tetap menerima data per item PR
+                    hiddenInputsHtml += `
+                    <input type="hidden" class="pr-item-id" name="items[${item.id}][pr_item_id]" value="${item.id}">
+                    <input type="hidden" class="pr-item-quantity" name="items[${item.id}][quantity]" value="${item.qty}">
+                    <input type="hidden" class="pr-item-price" name="items[${item.id}][price]" value="0">
+                `;
+                });
+
+                // Hapus koma dan spasi terakhir dari string detail
+                prDetailsHtml = prDetailsHtml.slice(0, -2);
+
+                // 2. Gabungkan semuanya menjadi satu baris tabel (<tr>)
+                const rowHtml = `
+                <tr data-item-name="${itemName}">
+                    <td class="align-middle">
+                        <strong>${itemName}</strong><br>
+                        <small class="text-muted">${prDetailsHtml}</small>
+                        <div class="hidden-inputs">${hiddenInputsHtml}</div>
+                    </td>
+                    <td class="align-middle text-center">${totalQuantity}</td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm group-quantity" value="${totalQuantity}" min="1" max="${totalQuantity}" required>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm group-price" placeholder="Harga satuan" min="0" step="any" required>
+                    </td>
+                    <td class="align-middle text-center">
+                        <button type="button" class="btn btn-sm btn-danger btn-remove-row">&times;</button>
+                    </td>
+                </tr>
+            `;
+                return rowHtml;
             }
 
-            // Panggil fungsi inisialisasi di awal
-            updateRemoveButtons();
-            calculateTotal();
+            // PERUBAHAN: Sebelum submit, salin harga & qty dari input grup ke input tersembunyi
+            $('#po-form').on('submit', function(e) {
+                if (poItemsTbody.children('#empty-row').length > 0 || poItemsTbody.children().length ===
+                    0) {
+                    e.preventDefault();
+                    alert('Harap tambahkan minimal satu item ke Purchase Order.');
+                    return;
+                }
+
+                // Loop setiap baris di tabel
+                poItemsTbody.find('tr').each(function() {
+                    const row = $(this);
+                    const groupPrice = row.find('.group-price').val();
+                    const groupQuantity = row.find('.group-quantity').val();
+
+                    // Salin harga grup ke setiap input harga yang tersembunyi di dalam baris ini
+                    row.find('.pr-item-price').val(groupPrice);
+
+                    // NOTE: Logika kuantitas di sini mengasumsikan pemenuhan penuh (fullfilment).
+                    // Jika Anda memesan kurang dari total, backend akan memproses sesuai kuantitas asli per PR.
+                    // Untuk partial fullfilment yang lebih kompleks, diperlukan logika tambahan.
+                });
+            });
         });
     </script>
 @endpush

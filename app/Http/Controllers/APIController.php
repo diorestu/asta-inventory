@@ -6,6 +6,9 @@ use App\Models\Product;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Purchase;
+use App\Models\PurchaseRequest;
+use App\Models\PurchaseRequestItem;
 use Illuminate\Support\Facades\Auth;
 
 class APIController extends Controller
@@ -32,7 +35,7 @@ class APIController extends Controller
         try {
             // 1. Ambil data dari database SEKALI saja
             $warehouses = Warehouse::select('id', 'name')->get();
-            $activeWarehouse = Warehouse::select('id', 'name')->where('id', Auth::user()->active_warehouse)->first();
+            // $activeWarehouse = Warehouse::select('id', 'name')->where('id', Auth::user()->active_warehouse)->first();
 
             // 2. Cek apakah collection yang dihasilkan kosong
             if ($warehouses->isEmpty()) {
@@ -41,14 +44,40 @@ class APIController extends Controller
             }
 
             // 3. Jika ada data, kirim collection tersebut
-            return response()->json([
-                'warehouses' => $warehouses,
-                'active_warehouse' => $activeWarehouse
-            ])->setStatusCode(200, 'OK', [
+            return response()->json(
+                $warehouses,
+            )->setStatusCode(200, 'OK', [
                 'Content-Type' => 'application/json'
             ]);
         } catch (\Exception $e) {
             // Return error dengan pesan yang lebih deskriptif untuk debugging
+            return response()->json(['error' => 'Terjadi kesalahan pada server', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function setActiveWarehouse(Request $req)
+    {
+        try {
+            Auth::user()->update(['active_warehouse' => $req->warehouse_id]);
+            return response()->json([
+                'message' => 'Gudang aktif berhasil diubah',
+            ], 200);
+        } catch (\Exception $e) {
+            // Return error dengan pesan yang lebih deskriptif untuk debugging
+            return response()->json(['error' => 'Terjadi kesalahan pada server', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getItemsByName($itemName)
+    {
+        try {
+            $items = PurchaseRequestItem::where('name', $itemName)
+                ->where('status', 'pending')
+                ->with('purchaseRequest.user') // Tetap eager load untuk info detail
+                ->get();
+
+            return response()->json($items);
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Terjadi kesalahan pada server', 'message' => $e->getMessage()], 500);
         }
     }

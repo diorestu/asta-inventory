@@ -9,13 +9,14 @@ class PurchaseOrderItem extends Model
 {
     protected $guarded = ['id'];
 
-    /**
-     * Get the order that owns the PurchaseOrderItem
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function order(): BelongsTo
+    public function purchaseOrder(): BelongsTo
     {
-        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id', 'id');
+        return $this->belongsTo(PurchaseOrder::class);
+    }
+
+    // Relasi penting untuk melacak asal item
+    public function purchaseRequestItem(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseRequestItem::class);
     }
 }

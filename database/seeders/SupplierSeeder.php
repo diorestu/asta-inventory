@@ -19,20 +19,21 @@ class SupplierSeeder extends Seeder
     {
         // Inisialisasi Faker untuk membuat data palsu.
         $faker = \Faker\Factory::create('id_ID'); // Menggunakan lokal Indonesia untuk data yang lebih relevan
+
         for ($i = 0; $i < 10; $i++) {
             // Membuat data supplier dengan informasi yang relevan.
             Supplier::create([
                 'name'           => $faker->company(),
                 'contact_person' => $faker->name(),
                 'email'          => $faker->unique()->safeEmail(),
-                'phone_number'   => $faker,
+                'phone_number'   => $faker->phoneNumber(),
                 'tax_id'         => $faker->unique()->numerify('###########'), // Contoh format NPWP
                 'is_active'      => true, // Status aktif
                 'city'           => $faker->city(),
                 'country'        => $faker->country(),
                 'address'        => $faker->address(),
-                'payment_method' => $faker->randomElement(['Cash', 'Transfer', 'Credit']),
-                'payment_terms'  => $faker->randomElement(['Net 30', 'Net 60', 'Due on Receipt']),
+                'payment_method' => $faker->randomElement(['Cash', 'NET', 'Credit Card', 'Bank Transfer']), // Metode pembayaran
+                'payment_terms'  => $faker->numerify('##'), // Contoh format NPWP
             ]);
         }
     }
